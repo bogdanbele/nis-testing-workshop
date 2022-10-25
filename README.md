@@ -7,6 +7,7 @@ This is a quick introduction into creating our own testing framework, and what a
 What we will cover today:
 - How does a testing framework work?
 - How do we test values?
+- **Describe - It - Expect**
 - Matcher classes
 - Expected vs Actual
 - Negations
