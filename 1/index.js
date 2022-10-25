@@ -20,16 +20,17 @@ class Matchers {
     }
 
     #handleError(error) {
+        const errorMessage = `Fail - ${error}`
         if (this.shouldContinueOnError) {
-            printError(error)
+            printError(errorMessage)
         } else {
-            throw Error(error)
+            throw Error(errorMessage)
         }
     }
 
     #outputErrorOutlook() {
         if (this.isPositiveOutlook === false) {
-            return " not to be"
+            return "not "
         }
         return ""
     }
@@ -38,7 +39,7 @@ class Matchers {
         if (this.#compare(expected === this.actual)) {
             printSuccess()
         } else {
-            this.#handleError(`Fail - Expected${this.#outputErrorOutlook()}: [${expected}] Actual: [${this.actual}]`)
+            this.#handleError(`Expected: [${this.#outputErrorOutlook()}${expected}] Received: [${this.actual}]`)
         }
     }
 
@@ -46,7 +47,7 @@ class Matchers {
         if (this.#compare(this.actual)) {
             printSuccess()
         } else {
-            this.#handleError(`Fail - Expected [${this.actual}] to be truthy.`)
+            this.#handleError(`Expected [${this.actual}] ${this.#outputErrorOutlook()}to be truthy.`)
         }
     }
 
@@ -106,5 +107,8 @@ describe("Tests that should fail", () => {
     })
     it("1+1 should not equal 2", () => {
         expect(1 + 1).not().toBe(2)
+    })
+    it("Value should not be truthy", ()=> {
+        expect(123).not().toBeTruthy()
     })
 })
