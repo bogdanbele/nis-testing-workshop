@@ -1,0 +1,23 @@
+{
+  "name": "testing-workshop",
+  "version": "1.0.0",
+  "description": "",
+  "type":"module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bogdanbele/testing-workshop.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bogdanbele/testing-workshop/issues"
+  },
+  "homepage": "https://github.com/bogdanbele/testing-workshop#readme",
+  "dependencies": {
+    "chalk": "^5.1.2"
+  }
+}
