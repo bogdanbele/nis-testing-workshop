@@ -19,11 +19,11 @@ class Matchers {
         return false
     }
 
-    #throwError(expression) {
+    #handleError(error) {
         if (this.continueOnError) {
-            printError(expression)
+            printError(error)
         } else {
-            throw Error(expression)
+            throw Error(error)
         }
     }
 
@@ -38,7 +38,7 @@ class Matchers {
         if (this.#compare(expected === this.actual)) {
             printSuccess()
         } else {
-            this.#throwError(`Fail - Expected${this.#outputErrorOutlook()}: [${expected}] Actual: [${this.actual}]`)
+            this.#handleError(`Fail - Expected${this.#outputErrorOutlook()}: [${expected}] Actual: [${this.actual}]`)
         }
     }
 
@@ -46,7 +46,7 @@ class Matchers {
         if (this.#compare(this.actual)) {
             printSuccess()
         } else {
-            this.#throwError(`Fail - Expected [${this.actual}] to be truthy.`)
+            this.#handleError(`Fail - Expected [${this.actual}] to be truthy.`)
         }
     }
 
