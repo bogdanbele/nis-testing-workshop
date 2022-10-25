@@ -1,77 +1,52 @@
-import chalk from "chalk";
-
-
-// 1+1   === 2
-
-// compare(1+1, direction) =>
-
-// compare(1+1), false) => true
-// compare(1+1, true) => false
-
-
-// expected === this.actual
-
-const compare = (expression, direction) => {
-    if (expression === true) {
-        return direction;
-    } else {
-        if (direction === false) {
-            return true
-        }
-    }
-    return false
-}
-
-
-const addSpace = (amount) => {
-    let newAmount = amount;
-    let spaces = ""
-    while (0 < newAmount) {
-        spaces += " "
-        newAmount--
-    }
-    return spaces
-}
-
-const addNewLine = () => {
-    return "\n"
-}
-
-const log = (text, spaces = 0) => console.log(addSpace(spaces) + text)
-
-const printSuccess = (test) => log(chalk.greenBright(test), 2)
-const printInfo = (test) => log(chalk.bgBlackBright.yellowBright(test), 1)
-const printSuite = (test) => log(chalk.bgGreenBright.whiteBright(addNewLine() + "Test Suite - " + test))
-const printError = (test) => log(chalk.red(test), 2)
+import {printError, printInfo, printSuccess, printSuite} from "../ utils.js";
 
 
 class Matchers {
     constructor(actual) {
         this.actual = actual
+        this.continueOnError = true
         this.isPositiveOutlook = true
     }
 
-    toBe(expected) {
-        if (expected === this.actual) {
-            printSuccess("Success ")
+    #compare(expression) {
+        if (Boolean(expression) === true) {
+            return this.isPositiveOutlook;
         } else {
-            printError('Fail')
+            if (this.isPositiveOutlook === false) {
+                return true
+            }
+        }
+        return false
+    }
+
+    #throwError(expression) {
+        if (this.continueOnError) {
+            printError(expression)
+        } else {
+            throw Error(expression)
         }
     }
 
-    toBeFlippable(expected) {
-        if (compare(expected === this.actual, this.isPositiveOutlook)) {
-            printSuccess("Success ")
+    #outputErrorOutlook() {
+        if (this.isPositiveOutlook === false) {
+            return " not to be"
+        }
+        return ""
+    }
+
+    toBe(expected) {
+        if (this.#compare(expected === this.actual)) {
+            printSuccess()
         } else {
-            printError('Fail')
+            this.#throwError(`Fail - Expected${this.#outputErrorOutlook()}: [${expected}] Actual: [${this.actual}]`)
         }
     }
 
     toBeTruthy() {
-        if (this.actual) {
-            printSuccess("Success ")
+        if (this.#compare(this.actual)) {
+            printSuccess()
         } else {
-            printError('Fail')
+            this.#throwError(`Fail - Expected [${this.actual}] to be truthy.`)
         }
     }
 
@@ -86,39 +61,50 @@ function expect(actual) {
     return new Matchers(actual)
 }
 
-expect(1 + 1).toBeTruthy()
-expect(1 + 1).toBe(3)
-
 function it(testName, fn) {
     printInfo(testName)
     fn()
 }
-
 
 function describe(suiteName, fn) {
     try {
         printSuite(suiteName)
         fn();
     } catch (err) {
-        console.log(err.message);
+        printError(err)
     }
 }
 
 
-describe("Basic maths tests", () => {
-    it("1+1 should equal 2", () => {
+describe("Basic math tests", () => {
+    it("1+1 should be 2", () => {
         expect(1 + 1).toBe(2)
     })
-    it("1+2 should not equal 3", () => {
-        expect(1 + 1).toBe(3)
+    it("1+1 should not be 3", () => {
+        expect(1 + 1).not().toBe(3)
+    })
+    it("null should not be truthy", () => {
+        expect(null).not().toBeTruthy()
+    })
+    it("one digit test", () => {
+        expect(123).toBe(123)
+    })
+    it("Different sums lead to same results", () => {
+        expect(1+2+3).toBe(4+1+1)
+    })
+    it("123 should be truthy", () => {
+        expect(123).toBeTruthy()
     })
 })
 
-describe("Flippable statement", () => {
-    it("1+1 should be 2", () => {
-        expect(1 + 1).toBeFlippable(2)
+describe("Tests that should fail", () => {
+    it("Null should be truthy", () => {
+        expect(null).toBeTruthy()
     })
-    it("1+1 should not be 4", () => {
-        expect(1 + 1).not().toBeFlippable(3)
+    it("Wrong sum: 1+3=3", () => {
+        expect(1 + 3).toBe(3)
+    })
+    it("1+1 should not equal 2", () => {
+        expect(1 + 1).not().toBe(2)
     })
 })
