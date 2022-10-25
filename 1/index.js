@@ -4,7 +4,7 @@ import {printError, printInfo, printSuccess, printSuite} from "../ utils.js";
 class Matchers {
     constructor(actual) {
         this.actual = actual
-        this.continueOnError = true
+        this.shouldContinueOnError = true
         this.isPositiveOutlook = true
     }
 
@@ -20,7 +20,7 @@ class Matchers {
     }
 
     #handleError(error) {
-        if (this.continueOnError) {
+        if (this.shouldContinueOnError) {
             printError(error)
         } else {
             throw Error(error)
