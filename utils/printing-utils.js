@@ -4,7 +4,6 @@ const successColor = (text) => chalk.greenBright(text)
 const infoColor = (text) => chalk.bgBlackBright.yellowBright(text)
 const suiteColor = (text) => chalk.bgGreenBright.whiteBright(text)
 
-
 const addSpace = (amount) => {
     let newAmount = amount;
     let spaces = ""
